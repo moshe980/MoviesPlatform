@@ -8,9 +8,9 @@ public class ApiController {
     private APIService apiService;
 
     private ApiController() {
-         //apiService = TmbdApiManagerRetrofit.getInstance();
+        //apiService = TmbdApiManagerRetrofit.getInstance();
         apiService = TmbdApiManagerOkHttps.getInstance();
-}
+    }
 
 
     public static ApiController getInstance() {
@@ -21,7 +21,7 @@ public class ApiController {
         return instance;
     }
 
-    public APIService getApiService(){
+    public APIService getApiService() {
         return apiService;
     }
 }
