@@ -5,11 +5,16 @@ public class Application {
 
     public static void main(String[] args) {
 
-
-        ApiController.getInstance().getApiService().getMovieByCategory(27, new ApiResult<String, Exception>() {
+        ApiController.getInstance().getApiService().getAllMovies( new ApiResult<String, Exception>() {
             @Override
             public void onResult(String data, Exception exception) {
-                System.out.println(data);
+                if(data != null)
+                {
+                    System.out.println(data);
+
+                }else{
+                    System.err.println(exception.getMessage());
+                }
             }
         });
     }

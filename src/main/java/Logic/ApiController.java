@@ -1,12 +1,16 @@
 package Logic;
 
+import Logic.OkHttp.TmbdApiManagerOkHttps;
+import Logic.Retrofit.TmbdApiManagerRetrofit;
+
 public class ApiController {
     private static ApiController instance;
     private APIService apiService;
 
     private ApiController() {
-         apiService = TmbdApiManager.getInstance();
-    }
+         //apiService = TmbdApiManagerRetrofit.getInstance();
+        apiService = TmbdApiManagerOkHttps.getInstance();
+}
 
 
     public static ApiController getInstance() {

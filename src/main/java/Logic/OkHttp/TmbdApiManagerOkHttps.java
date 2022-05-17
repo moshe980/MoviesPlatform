@@ -1,24 +1,29 @@
-package Logic;
+package Logic.OkHttp;
 
+import Logic.APIService;
+import Logic.ApiEmptyBodyException;
+import Logic.ApiResult;
 import com.squareup.okhttp.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TmbdApiManager implements APIService {
+public class TmbdApiManagerOkHttps implements APIService {
     private OkHttpClient client;
     private Request request;
-    private static TmbdApiManager instance;
+    private static TmbdApiManagerOkHttps instance;
     private String baseUrl;
 
-    private TmbdApiManager() {
+    private TmbdApiManagerOkHttps() {
         baseUrl="https://api.themoviedb.org/3";
         client = new OkHttpClient();
 
     }
 
-    public static TmbdApiManager getInstance() {
+    public static TmbdApiManagerOkHttps getInstance() {
         if (instance == null) {
-            instance = new TmbdApiManager();
+            instance = new TmbdApiManagerOkHttps();
         }
         return instance;
 
