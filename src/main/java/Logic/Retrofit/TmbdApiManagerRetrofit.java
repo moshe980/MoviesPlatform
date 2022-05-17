@@ -1,8 +1,9 @@
 package Logic.Retrofit;
 
 import Logic.APIService;
+import Logic.ApiEmptyBodyException;
 import Logic.ApiResult;
-import data.Instance;
+import data.Medias;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,12 +17,12 @@ public class TmbdApiManagerRetrofit implements APIService {
     private RetrofitApis retrofitApis;
 
     private TmbdApiManagerRetrofit() {
-        baseUrl="https://api.themoviedb.org/3/";
+        baseUrl = "https://api.themoviedb.org/3/";
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        retrofitApis=retrofit.create(RetrofitApis.class);
+        retrofitApis = retrofit.create(RetrofitApis.class);
     }
 
     public static TmbdApiManagerRetrofit getInstance() {
@@ -33,62 +34,79 @@ public class TmbdApiManagerRetrofit implements APIService {
     }
 
     @Override
-    public void getAllMovies(ApiResult<String, Exception> callBack) {
-        retrofitApis.getAllMovies().enqueue(new Callback<Instance>() {
+    public void getAllMovies(ApiResult<Medias, Exception> callBack) {
+        retrofitApis.getAllMovies().enqueue(new Callback<Medias>() {
             @Override
-            public void onResponse(Call<Instance> call, Response<Instance> response) {
-                callBack.onResult(response.body().toString(),null);
+            public void onResponse(Call<Medias> call, Response<Medias> response) {
+                Medias data =response.body();
+                callBack.onResult(data, null);
+
             }
 
             @Override
-            public void onFailure(Call<Instance> call, Throwable t) {
-                callBack.onResult(null,new RuntimeException(t));
+            public void onFailure(Call<Medias> call, Throwable t) {
+                callBack.onResult(null, new ApiEmptyBodyException());
+
             }
         });
     }
 
     @Override
-    public void getNewMovies(ApiResult<String, Exception> callBack) {
-        retrofitApis.getNewMovies().enqueue(new Callback<Instance>() {
+    public void getTopRatedMovies(ApiResult<Medias, Exception> callBack) {
+        retrofitApis.getTopRatedMovies().enqueue(new Callback<Medias>() {
             @Override
-            public void onResponse(Call<Instance> call, Response<Instance> response) {
-                callBack.onResult(response.body().toString(),null);
+            public void onResponse(Call<Medias> call, Response<Medias> response) {
+                Medias data =response.body();
+                callBack.onResult(data, null);
+
             }
 
             @Override
-            public void onFailure(Call<Instance> call, Throwable t) {
-                callBack.onResult(null,new RuntimeException(t));
+            public void onFailure(Call<Medias> call, Throwable t) {
+                callBack.onResult(null, new ApiEmptyBodyException());
+
+            }
+        });
+    }
+
+
+
+    @Override
+    public void getMovieByCategory(Long category, ApiResult<Medias, Exception> callBack) {
+        retrofitApis.getMoviesByCategory(27L).enqueue(new Callback<Medias>() {
+            @Override
+            public void onResponse(Call<Medias> call, Response<Medias> response) {
+                Medias data =response.body();
+                callBack.onResult(data, null);
+
+            }
+
+            @Override
+            public void onFailure(Call<Medias> call, Throwable t) {
+                callBack.onResult(null, new ApiEmptyBodyException());
+
             }
         });
     }
 
     @Override
-    public void getMovieByCategory(int category, ApiResult<String, Exception> callBack) {
-        retrofitApis.getMovieByCategory(category).enqueue(new Callback<Instance>() {
+    public void getAllShows(ApiResult<Medias, Exception> callBack) {
+        retrofitApis.getAllShows().enqueue(new Callback<Medias>() {
             @Override
-            public void onResponse(Call<Instance> call, Response<Instance> response) {
-                callBack.onResult(response.body().toString(),null);
+            public void onResponse(Call<Medias> call, Response<Medias> response) {
+                Medias data =response.body();
+                callBack.onResult(data, null);
+
             }
 
             @Override
-            public void onFailure(Call<Instance> call, Throwable t) {
-                callBack.onResult(null,new RuntimeException(t));
+            public void onFailure(Call<Medias> call, Throwable t) {
+                callBack.onResult(null, new ApiEmptyBodyException());
+
             }
         });
+
     }
 
-    @Override
-    public void getAllShows(ApiResult<String, Exception> callBack) {
-        retrofitApis.getAllShows().enqueue(new Callback<Instance>() {
-            @Override
-            public void onResponse(Call<Instance> call, Response<Instance> response) {
-                callBack.onResult(response.body().toString(),null);
-            }
 
-            @Override
-            public void onFailure(Call<Instance> call, Throwable t) {
-                callBack.onResult(null,new RuntimeException(t));
-            }
-        });
-    }
 }

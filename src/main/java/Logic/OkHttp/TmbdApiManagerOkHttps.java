@@ -3,11 +3,12 @@ package Logic.OkHttp;
 import Logic.APIService;
 import Logic.ApiEmptyBodyException;
 import Logic.ApiResult;
-import com.squareup.okhttp.*;
+import com.google.gson.Gson;
+import data.Medias;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TmbdApiManagerOkHttps implements APIService {
     private OkHttpClient client;
@@ -16,9 +17,8 @@ public class TmbdApiManagerOkHttps implements APIService {
     private String baseUrl;
 
     private TmbdApiManagerOkHttps() {
-        baseUrl="https://api.themoviedb.org/3";
+        baseUrl = "https://api.themoviedb.org/3";
         client = new OkHttpClient();
-
     }
 
     public static TmbdApiManagerOkHttps getInstance() {
@@ -30,108 +30,122 @@ public class TmbdApiManagerOkHttps implements APIService {
     }
 
     @Override
-    public void getAllMovies(ApiResult<String, Exception> callBack) {
+    public void getAllMovies(ApiResult<Medias, Exception> callBack) {
         request = new Request.Builder()
-                .url(baseUrl+"/discover/movie?api_key=96624ea86553cd7a4caed4ecbdc35ec1")
+                .url(baseUrl + "/discover/movie?api_key=96624ea86553cd7a4caed4ecbdc35ec1")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                callBack.onResult(null,e);
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                callBack.onResult(null, e);
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 ResponseBody responseBody = response.body();
 
-                if(responseBody != null){
-                    callBack.onResult(responseBody.string(),null);
+                if (responseBody != null) {
+                    Medias data = new Gson().fromJson(response.body().string(), Medias.class);
+                    callBack.onResult(data, null);
 
-                }else {
-                    callBack.onResult(null,new ApiEmptyBodyException());
+                } else {
+                    callBack.onResult(null, new ApiEmptyBodyException());
 
                 }
-
             }
         });
     }
 
     @Override
-    public void getNewMovies(ApiResult<String, Exception> callBack) {
+    public void getTopRatedMovies(ApiResult<Medias, Exception> callBack) {
         request = new Request.Builder()
-                .url(baseUrl+"/discover/movie?api_key=96624ea86553cd7a4caed4ecbdc35ec1/popular")
+                .url(baseUrl + "/movie/top_rated?api_key=96624ea86553cd7a4caed4ecbdc35ec1")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                callBack.onResult(null,e);
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                ResponseBody responseBody = response.body();
+                if (responseBody != null) {
+                    Medias data = new Gson().fromJson(response.body().string(), Medias.class);
+                    callBack.onResult(data, null);
 
+                } else {
+                    callBack.onResult(null, new ApiEmptyBodyException());
+
+                }
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                callBack.onResult(null, e);
+
+            }
+
+        });
+
+    }
+
+
+
+    @Override
+    public void getMovieByCategory(Long category, ApiResult<Medias, Exception> callBack) {
+        request = new Request.Builder()
+                .url(baseUrl + "/discover/movie?api_key=96624ea86553cd7a4caed4ecbdc35ec1&with_genres=" + category)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 ResponseBody responseBody = response.body();
-                if(responseBody != null){
-                    callBack.onResult(responseBody.string(),null);
+                if (responseBody != null) {
+                    Medias data = new Gson().fromJson(response.body().string(), Medias.class);
+                    callBack.onResult(data, null);
 
-                }else {
-                    callBack.onResult(null,new ApiEmptyBodyException());
+                } else {
+                    callBack.onResult(null, new ApiEmptyBodyException());
 
-                }            }
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                callBack.onResult(null, e);
+
+            }
+
         });
     }
 
     @Override
-    public void getMovieByCategory(int category, ApiResult<String, Exception> callBack) {
+    public void getAllShows(ApiResult<Medias, Exception> callBack) {
         request = new Request.Builder()
-                .url(baseUrl+"/discover/movie?api_key=96624ea86553cd7a4caed4ecbdc35ec1&with_genres="+category)
+                .url(baseUrl + "/tv/popular?api_key=96624ea86553cd7a4caed4ecbdc35ec1")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                callBack.onResult(null,e);
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                callBack.onResult(null, e);
 
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
-                ResponseBody responseBody = response.body();
-                if(responseBody != null){
-                    callBack.onResult(responseBody.string(),null);
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response != null) {
+                    Medias data = new Gson().fromJson(response.body().string(), Medias.class);
+                    callBack.onResult(data, null);
 
-                }else {
-                    callBack.onResult(null,new ApiEmptyBodyException());
+                } else {
+                    callBack.onResult(null, new ApiEmptyBodyException());
 
-                }            }
-        });
-    }
-
-    @Override
-    public void getAllShows(ApiResult<String, Exception> callBack) {
-        request = new Request.Builder()
-                .url(baseUrl+"/tv/latest?api_key=96624ea86553cd7a4caed4ecbdc35ec1")
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                callBack.onResult(null,e);
-
+                }
+            }
             }
 
-            @Override
-            public void onResponse(Response response) throws IOException {
-                ResponseBody responseBody = response.body();
-                if(responseBody != null){
-                    callBack.onResult(responseBody.string(),null);
-
-                }else {
-                    callBack.onResult(null,new ApiEmptyBodyException());
-
-                }            }
-        });
+);
     }
+
+
 }

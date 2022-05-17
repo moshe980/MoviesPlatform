@@ -1,13 +1,15 @@
 package Logic;
 
+import data.Medias;
+
 public interface APIService {
-    void getAllMovies(ApiResult<String,Exception> callBack);
+    void getAllMovies(ApiResult<Medias,Exception> callBack);
 
-    void getNewMovies(ApiResult<String,Exception> callBack);
+    void getTopRatedMovies(ApiResult<Medias,Exception> callBack);
 
-    void getMovieByCategory(int category,ApiResult<String,Exception> callBack);
+    void getMovieByCategory(Long category,ApiResult<Medias,Exception> callBack);
 
-    void getAllShows(ApiResult<String,Exception> callBack);
+    void getAllShows(ApiResult<Medias, Exception> callBack);
 
 
 }
