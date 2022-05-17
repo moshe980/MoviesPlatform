@@ -9,8 +9,12 @@ public class Application {
         ApiController.getInstance().getApiService().getMovieByCategory(27L,new ApiResult<Medias, Exception>() {
             @Override
             public void onResult(Medias data, Exception exception) {
-                for (Object o:data.getResults()){
-                    System.out.println(o.toString());
+                if(data != null) {
+                    for (Object o : data.getResults()) {
+                        System.out.println(o.toString());
+                    }
+                }else{
+                    System.err.println(exception.getMessage());
                 }
             }
         });
