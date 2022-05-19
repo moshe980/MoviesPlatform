@@ -1,23 +1,12 @@
-import Logic.ApiController;
-import Logic.ApiResult;
-import data.Medias;
+import logic.MediaProvider;
+import logic.ServiceBuilder;
+import view.MediaPresenter;
 
 public class Application {
 
     public static void main(String[] args) {
+        MediaPresenter.present(new MediaProvider(new ServiceBuilder().getMediaService()));
 
-        ApiController.getInstance().getApiService().getMovieByCategory(27L,new ApiResult<Medias, Exception>() {
-            @Override
-            public void onResult(Medias data, Exception exception) {
-                if(data != null) {
-                    for (Object o : data.getResults()) {
-                        System.out.println(o.toString());
-                    }
-                }else{
-                    System.err.println(exception.getMessage());
-                }
-            }
-        });
     }
 
 

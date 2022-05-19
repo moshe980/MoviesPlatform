@@ -1,19 +1,16 @@
-package data;
-
-import com.google.gson.annotations.SerializedName;
+package model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Medias {
     private float page;
-    ArrayList < Object > results = new ArrayList < Object > ();
+    private ArrayList < Media > results;
     private float total_pages;
     private float total_results;
 
 
     public Medias() {
-
+        results=new ArrayList<>();
 
     }
 
@@ -21,7 +18,7 @@ public class Medias {
         return page;
     }
 
-    public ArrayList<Object> getResults() {
+    public ArrayList<Media> getResults() {
         return results;
     }
 
