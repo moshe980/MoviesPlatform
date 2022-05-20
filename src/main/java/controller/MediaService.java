@@ -1,4 +1,4 @@
-package logic;
+package controller;
 
 import model.Medias;
 import retrofit2.Call;
@@ -13,7 +13,7 @@ public interface MediaService {//remove api key
     Call<Medias> getTopRatedMovies();
 
     @GET("discover/movie")
-    Call<Medias> getMoviesByCategory(@Query("with_genres") int genre_id);
+    Call<Medias> getMoviesByGenerId(@Query("with_genres") int genre_id);
 
     @GET("tv/popular")
     Call<Medias> getAllShows();

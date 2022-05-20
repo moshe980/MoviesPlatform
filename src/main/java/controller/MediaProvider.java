@@ -1,4 +1,4 @@
-package logic;
+package controller;
 
 import model.Medias;
 import org.jetbrains.annotations.NotNull;
@@ -6,16 +6,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MediaProvider {
+public class MediaProvider  {
     private MediaService mediaService;
+    private Callback<Medias> callback;
 
-    public MediaProvider(MediaService mediaService) {
-        this.mediaService = mediaService;
-    }
+    public MediaProvider(ApiResult apiResult) {
 
-    public void getMedias(ApiResult apiResult) {
-
-        mediaService.getMoviesByCategory(28).enqueue(new Callback<Medias>() {
+        callback = new Callback<Medias>() {
             @Override
             public void onResponse(@NotNull Call<Medias> call, @NotNull Response<Medias> response) {
                 Medias data = response.body();
@@ -34,7 +31,15 @@ public class MediaProvider {
                 apiResult.onResult(null, new RuntimeException(t.getLocalizedMessage()));
 
             }
-        });
+        };
+        this.mediaService = new ServiceBuilder().getMediaService();
+    }
+
+
+    public void getMedia() {
+
+        mediaService.getAllMovies().enqueue(callback);
 
     }
+
 }

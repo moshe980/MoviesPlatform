@@ -1,4 +1,4 @@
-package logic;
+package controller;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -14,6 +14,7 @@ public class ServiceBuilder {
     private MediaService mediaService;
 
     public ServiceBuilder()  {
+        //Read from local.properties:
         Properties prop = new Properties();
         try {
             prop.load(new FileInputStream("src/main/resources/local.properties"));
@@ -21,6 +22,7 @@ public class ServiceBuilder {
             e.printStackTrace();
         }
 
+        //Add interceptor as query to the url:
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.addInterceptor(chain -> {
             Request original =chain.request();
@@ -29,13 +31,13 @@ public class ServiceBuilder {
                         .addQueryParameter("api_key", prop.getProperty("api_key"))
                     .build();
 
-            // Request customization: add request headers
             Request.Builder requestBuilder = original.newBuilder()
                     .url(url);
 
             Request request = requestBuilder.build();
             return chain.proceed(request );
         });
+        //Build retrofit:
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(prop.getProperty("baseUrl"))
                 .client(httpClientBuilder.build())
